@@ -9,7 +9,7 @@ PADDLE_WIDTH = 20
 PADDLE_HEIGHT = 80
 PADDLE_SPEED = 250
 
-INIT_BALL_SPEED = 250 #moves 150 pixels per second across the hypotenuse
+INIT_BALL_SPEED = 400 #moves 150 pixels per second across the hypotenuse
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -19,10 +19,6 @@ SCORE_FONT_SIZE = 20
 INTRO_SCREEN = "INTRO_SCREEN"
 GAME_PLAY = "GAME_PLAY"
 GAME_OVER = "GAME_OVER"
-
-WINNER = "NONE"
-P1 = "player_1"
-P2 = "player_2"
 
 SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -116,20 +112,21 @@ def main():
             
             if ball.right >= WINDOW_WIDTH and movement_vector.x > 0:#Player1 Scores point
                 score_2 += 1
+                pygame.event.clear()
+                movement_vector = Vector2(-1, 0)
                 ball_pos = Vector2(WINDOW_WIDTH//4, WINDOW_HEIGHT//2)
                 speed = 250
-                pygame.time.wait(2000)
-                pygame.event.clear()
+                
                 
                 
                 # movement_vector.x *= -1
 
             if ball.left <= 0 and movement_vector.x < 0:#player2 Scores point
                 score_1 += 1
+                pygame.event.clear()
+                movement_vector = Vector2(1, 0)
                 ball_pos = Vector2(WINDOW_WIDTH//4, WINDOW_HEIGHT//2)
                 speed = 250
-                pygame.time.wait(2000)
-                pygame.event.clear()
                 # movement_vector.x *= -1
                 
             if ball.bottom >= WINDOW_HEIGHT and movement_vector.y > 0:
@@ -166,16 +163,13 @@ def main():
                 movement_vector = movement_vector.normalize()
                 
             if score_1 == 3:
-                WINNER = P1
                 game_state = GAME_OVER
             elif score_2 == 3:
-                WINNER = P1
                 game_state = GAME_OVER
             draw_paddle_and_ball()
             
         elif game_state == GAME_OVER:
             score_1, score_2 = 0, 0
-            displayGameOver()
             w_pressed = False
             s_pressed = False
             up_pressed = False
@@ -215,13 +209,6 @@ def displayScore():
     score_text_2.midtop = (WINDOW_WIDTH // 4 * 3, 30)
     SCREEN.blit(score_msg_1, score_text_1)
     SCREEN.blit(score_msg_2, score_text_2)
-
-def displayGameOver():
-    intro_msg1 = intro_font.render(f'{WINNER}', True, WHITE)
-    text_intro = intro_msg1.get_rect()
-    text_intro.midbottom = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
-    SCREEN.blit(intro_msg1, text_intro)
-
     
 if __name__ == '__main__':
     main()
